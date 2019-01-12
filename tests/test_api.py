@@ -1,7 +1,7 @@
 import flask_testing
 from flask import Blueprint, Flask
 
-from flapi_jwt import FlaskJwt, HasScopes, MatchValue, protect
+from flapi_jwt import FlaskJwt, HasScopes, MatchValue, protect, current_handler
 
 blueprint = Blueprint("test_blueprint", __name__)
 jwt_handler = FlaskJwt("secret", 300, auto_update=True)
@@ -10,7 +10,7 @@ jwt_handler = FlaskJwt("secret", 300, auto_update=True)
 @blueprint.route("/token", methods=["GET"])
 def get_token():
     print("/token")
-    jwt_handler.generate_token({"uuid": "123"}, ["read:protected"])
+    current_handler().generate_token({"uuid": "123"}, ["read:protected"])
     return "success"
 
 
