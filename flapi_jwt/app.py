@@ -9,6 +9,7 @@ class FlaskJwt(builder.Builder):
 
     header_key = "Authorization"
     token_prefix = "Bearer "
+    config_key = "JWT_HANDLER"
     validation_error = errors.JWTValidationError
 
     def __init__(
@@ -27,10 +28,15 @@ class FlaskJwt(builder.Builder):
 
         self.init_app(app)
 
+    @classmethod
+    def current_handler(cls):
+        return flask.current_app.config[cls.config_key]
+
     def init_app(self, app: flask.Flask) -> None:
         if app is not None:
             app.before_request(self.pre_request_callback)
             app.after_request(self.post_request_callback)
+            app.config[self.config_key] = self
         self.app = app
 
     def pre_request_callback(self) -> None:
