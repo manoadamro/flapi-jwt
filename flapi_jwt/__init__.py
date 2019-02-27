@@ -9,6 +9,8 @@ protect = _route.Protect
 JWTRule = _rules.JwtRule
 HasScopes = _rules.HasScopes
 MatchValue = _rules.MatchValue
+HasKeys = _rules.HasKeys
+HasValue = _rules.HasValue
 
 AllOf = _rules.AllOf
 AnyOf = _rules.AnyOf
