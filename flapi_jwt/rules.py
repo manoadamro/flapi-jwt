@@ -46,6 +46,25 @@ class HasScopes(JwtRule):
         return all(scope in jwt_scopes for scope in self.scopes)
 
 
+class HasKeys(JwtRule):
+    def __init__(self, *keys: str):
+        self.keys = keys
+
+    def __call__(self, token: Dict) -> bool:
+        return all(key in token for key in self.keys)
+
+
+class HasValue(JwtRule):
+    def __init__(self, pointer: str, value):
+        if not pointer.startswith("/"):
+            pointer = f"/{pointer}"
+        self.pointer = pointer
+        self.value = value
+
+    def __call__(self, token: Dict) -> bool:
+        return jsonpointer.resolve_pointer(token, self.pointer)
+
+
 class MatchValue(JwtRule):
     def __init__(self, *paths):
         self.matchers: List[(Callable, str)] = [
