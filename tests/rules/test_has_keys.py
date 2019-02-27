@@ -12,4 +12,4 @@ class HasKeysTest(unittest.TestCase):
     def test_has_scopes_fails(self):
         token = {"thing": 123}
         rule = HasKeys("thing", "other")
-        self.assertTrue(rule(token))
+        self.assertFalse(rule(token))
