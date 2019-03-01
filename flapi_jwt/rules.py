@@ -62,7 +62,11 @@ class HasValue(JwtRule):
         self.value = value
 
     def __call__(self, token: Dict) -> bool:
-        return jsonpointer.resolve_pointer(token, self.pointer)
+        try:
+            jsonpointer.resolve_pointer(token, self.pointer)
+            return True
+        except jsonpointer.JsonPointerException:
+            return False
 
 
 class MatchValue(JwtRule):
@@ -74,9 +78,12 @@ class MatchValue(JwtRule):
             raise ValueError(f"MatchValue requires two or more paths")
 
     def __call__(self, token: Dict) -> bool:
-        return self._check_equal(
-            [matcher[0](matcher[1], token) for matcher in self.matchers]
-        )
+        try:
+            return self._check_equal(
+                [matcher[0](matcher[1], token) for matcher in self.matchers]
+            )
+        except jsonpointer.JsonPointerException:
+            return False
 
     def _resolve_path(self, path: str) -> (Callable, str):
         object_name, pointer = path.split(":")
