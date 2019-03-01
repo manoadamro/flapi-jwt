@@ -3,8 +3,6 @@ from typing import Any, Callable, Dict, List
 import flask
 import jsonpointer
 
-from .errors import JWTValidationError
-
 
 class JwtRule:
     def __call__(self, token: Dict) -> bool:
@@ -70,7 +68,6 @@ class HasValue(JwtRule):
         except jsonpointer.JsonPointerException:
             return False
 
-
 class MatchValue(JwtRule):
     def __init__(self, *paths):
         self.matchers: List[(Callable, str)] = [
@@ -86,7 +83,7 @@ class MatchValue(JwtRule):
             )
         except jsonpointer.JsonPointerException:
             return False
-
+          
     def _resolve_path(self, path: str) -> (Callable, str):
         object_name, pointer = path.split(":")
         if not pointer.startswith("/"):
