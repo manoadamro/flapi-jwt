@@ -3,7 +3,6 @@ from . import app as _app, protect as _route, rules as _rules, errors as _errors
 FlaskJwt = _app.FlaskJwt
 current_token = FlaskJwt.current_token
 current_handler = FlaskJwt.current_handler
-generate_token = FlaskJwt.current_handler().generate_token
 
 protect = _route.Protect
 

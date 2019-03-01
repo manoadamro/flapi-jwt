@@ -65,7 +65,8 @@ class HasValue(JwtRule):
 
     def __call__(self, token: Dict) -> bool:
         try:
-            return jsonpointer.resolve_pointer(token, self.pointer)
+            jsonpointer.resolve_pointer(token, self.pointer)
+            return True
         except jsonpointer.JsonPointerException:
             return False
 
