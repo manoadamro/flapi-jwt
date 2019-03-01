@@ -3,8 +3,6 @@ from typing import Any, Callable, Dict, List
 import flask
 import jsonpointer
 
-from .errors import JWTValidationError
-
 
 class JwtRule:
     def __call__(self, token: Dict) -> bool:
@@ -64,10 +62,7 @@ class HasValue(JwtRule):
         self.value = value
 
     def __call__(self, token: Dict) -> bool:
-        try:
-            return jsonpointer.resolve_pointer(token, self.pointer)
-        except jsonpointer.JsonPointerException:
-            return False
+        return jsonpointer.resolve_pointer(token, self.pointer)
 
 
 class MatchValue(JwtRule):
@@ -79,12 +74,9 @@ class MatchValue(JwtRule):
             raise ValueError(f"MatchValue requires two or more paths")
 
     def __call__(self, token: Dict) -> bool:
-        try:
-            return self._check_equal(
-                [matcher[0](matcher[1], token) for matcher in self.matchers]
-            )
-        except jsonpointer.JsonPointerException:
-            return False
+        return self._check_equal(
+            [matcher[0](matcher[1], token) for matcher in self.matchers]
+        )
 
     def _resolve_path(self, path: str) -> (Callable, str):
         object_name, pointer = path.split(":")
