@@ -68,6 +68,7 @@ class HasValue(JwtRule):
         except jsonpointer.JsonPointerException:
             return False
 
+
 class MatchValue(JwtRule):
     def __init__(self, *paths):
         self.matchers: List[(Callable, str)] = [
@@ -83,7 +84,7 @@ class MatchValue(JwtRule):
             )
         except jsonpointer.JsonPointerException:
             return False
-          
+
     def _resolve_path(self, path: str) -> (Callable, str):
         object_name, pointer = path.split(":")
         if not pointer.startswith("/"):
